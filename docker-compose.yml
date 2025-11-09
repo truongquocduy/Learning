@@ -1,0 +1,18 @@
+volumes:
+  learning_vendor:
+
+services:
+  learning-app:
+    build: ./
+    container_name: learning-app
+    volumes:
+      - ./:/var/www/html
+      - learning_vendor:/var/www/html/vendor
+
+    links:
+      - redis
+    ports:
+      - 18080:80
+
+  redis:
+    image: redis:latest
