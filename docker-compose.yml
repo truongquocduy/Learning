@@ -1,6 +1,10 @@
 volumes:
   learning_vendor:
 
+networks:
+  network-learning:
+    driver: bridge
+
 services:
   learning-app:
     build: ./
@@ -8,11 +12,25 @@ services:
     volumes:
       - ./:/var/www/html
       - learning_vendor:/var/www/html/vendor
-
     links:
       - redis
     ports:
       - 18080:80
+    networks:
+      - network-learning
+
+  db:
+    image: mysql:latest
+    container_name: db
+    environment:
+      MYSQL_DATABASE: 'learning'
+      MYSQL_USER: 'debug'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - 3306:3306
+    networks:
+      - network-learning
 
   redis:
     image: redis:latest
